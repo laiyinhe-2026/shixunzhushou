@@ -3,22 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>新能源维保 AI 实训助手</title>
+  <title>新能源维保 AI 学训助手</title>
   <style>
     :root {
-      --blue: #1867f2;
-      --blue-dark: #0b2f78;
-      --blue-soft: #eaf2ff;
-      --green: #18b67b;
-      --green-soft: #e9f9f2;
+      --blue: #2f7cf6;
+      --blue-deep: #145fdb;
+      --blue-soft: #eef5ff;
+      --green: #29bd84;
+      --green-soft: #e7f8f0;
       --warning: #f15b3a;
       --warning-soft: #fff0ea;
-      --ink: #172033;
-      --muted: #667085;
-      --line: #e6ecf5;
-      --page: #f5f8fc;
+      --ink: #111827;
+      --muted: #7a8494;
+      --line: #e7edf6;
+      --page: #f4f7fb;
       --card: #ffffff;
-      --shadow: 0 26px 80px rgba(20, 45, 89, 0.24);
+      --shadow: 0 14px 36px rgba(22, 48, 84, 0.09);
+      --shadow-strong: 0 28px 76px rgba(28, 63, 118, 0.2);
     }
 
     * {
@@ -34,9 +35,18 @@
       font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif;
       color: var(--ink);
       background:
-        radial-gradient(circle at 16% 18%, rgba(24, 103, 242, 0.16), transparent 28%),
-        radial-gradient(circle at 82% 76%, rgba(24, 182, 123, 0.12), transparent 30%),
-        linear-gradient(135deg, #e9f1ff 0%, #f7fbff 48%, #eefbf6 100%);
+        radial-gradient(circle at 12% 12%, rgba(47, 124, 246, 0.16), transparent 30%),
+        radial-gradient(circle at 88% 82%, rgba(41, 189, 132, 0.13), transparent 32%),
+        linear-gradient(135deg, #e8f0ff 0%, #f7fbff 52%, #eefbf6 100%);
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
     }
 
     .stage {
@@ -51,117 +61,203 @@
     .stage::before {
       content: "";
       position: absolute;
-      width: 700px;
-      height: 700px;
-      border: 1px solid rgba(24, 103, 242, 0.12);
+      width: 720px;
+      height: 720px;
+      border: 1px solid rgba(47, 124, 246, 0.12);
       border-radius: 50%;
       transform: translate(-260px, -140px);
     }
 
     .phone {
-      width: 390px;
-      height: 844px;
-      padding: 12px;
-      border-radius: 42px;
-      background: linear-gradient(145deg, #162133, #0a1020 62%, #1d314a);
-      box-shadow: var(--shadow);
+      width: 430px;
+      height: 932px;
+      padding: 10px;
+      border-radius: 44px;
+      background: #ffffff;
+      box-shadow: var(--shadow-strong);
       position: relative;
       z-index: 1;
-    }
-
-    .phone::before {
-      content: "";
-      position: absolute;
-      top: 9px;
-      left: 50%;
-      width: 88px;
-      height: 27px;
-      border-radius: 0 0 18px 18px;
-      transform: translateX(-50%);
-      background: #0a1020;
-      z-index: 4;
     }
 
     .screen {
       height: 100%;
       overflow: hidden;
-      border-radius: 32px;
+      border-radius: 34px;
       background: var(--page);
       position: relative;
-      border: 1px solid rgba(255, 255, 255, 0.22);
+      border: 1px solid rgba(199, 211, 229, 0.7);
+    }
+
+    .mini-top {
+      height: 104px;
+      background: rgba(255, 255, 255, 0.96);
+      border-bottom: 1px solid rgba(226, 232, 242, 0.84);
+      position: relative;
+      z-index: 5;
     }
 
     .status-bar {
-      height: 34px;
-      padding: 10px 22px 0;
+      height: 38px;
+      padding: 12px 26px 0;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--ink);
-      background: #f8fbff;
+      font-size: 16px;
+      line-height: 1;
+      font-weight: 800;
+      color: #050910;
+      background: transparent;
     }
 
     .status-icons {
       display: flex;
-      gap: 5px;
+      gap: 9px;
       align-items: center;
     }
 
     .signal {
-      width: 16px;
-      height: 10px;
+      width: 22px;
+      height: 15px;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 2px;
+      gap: 3px;
       align-items: end;
     }
 
     .signal span {
       display: block;
-      width: 2px;
-      border-radius: 2px;
-      background: var(--ink);
+      width: 4px;
+      border-radius: 3px;
+      background: #050910;
     }
 
-    .signal span:nth-child(1) { height: 4px; }
-    .signal span:nth-child(2) { height: 6px; }
-    .signal span:nth-child(3) { height: 8px; }
-    .signal span:nth-child(4) { height: 10px; }
+    .signal span:nth-child(1) { height: 6px; }
+    .signal span:nth-child(2) { height: 9px; }
+    .signal span:nth-child(3) { height: 12px; }
+    .signal span:nth-child(4) { height: 15px; }
+
+    .wifi {
+      width: 20px;
+      height: 14px;
+      position: relative;
+    }
+
+    .wifi::before,
+    .wifi::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      border: 3px solid #050910;
+      border-color: #050910 transparent transparent transparent;
+      border-radius: 50%;
+      transform: translateX(-50%);
+    }
+
+    .wifi::before {
+      top: 0;
+      width: 24px;
+      height: 24px;
+    }
+
+    .wifi::after {
+      top: 6px;
+      width: 13px;
+      height: 13px;
+    }
 
     .battery {
-      width: 20px;
-      height: 10px;
-      border: 1.5px solid var(--ink);
-      border-radius: 3px;
+      width: 28px;
+      height: 14px;
+      display: grid;
+      place-items: center;
+      border: 1.8px solid #050910;
+      border-radius: 4px;
       position: relative;
+      font-size: 8px;
+      font-weight: 900;
+      line-height: 1;
     }
 
     .battery::before {
       content: "";
       position: absolute;
       right: -4px;
-      top: 2px;
+      top: 4px;
       width: 2px;
-      height: 4px;
+      height: 6px;
       border-radius: 1px;
-      background: var(--ink);
+      background: #050910;
     }
 
-    .battery::after {
+    .nav-title {
+      height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 0 132px 0 28px;
+    }
+
+    .nav-title h1 {
+      margin: 0;
+      font-size: 21px;
+      line-height: 1.15;
+      letter-spacing: 0;
+      white-space: nowrap;
+      color: #050910;
+    }
+
+    .capsule {
+      position: absolute;
+      right: 18px;
+      top: 13px;
+      width: 88px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      border: 1px solid #e5eaf2;
+      border-radius: 999px;
+      background: #ffffff;
+      box-shadow: 0 5px 18px rgba(22, 36, 58, 0.08);
+    }
+
+    .capsule .dots {
+      display: flex;
+      gap: 5px;
+    }
+
+    .capsule .dots span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #050910;
+    }
+
+    .capsule .divider {
+      width: 1px;
+      height: 20px;
+      background: #e4e8ef;
+    }
+
+    .capsule .circle {
+      width: 22px;
+      height: 22px;
+      border: 4px solid #050910;
+      border-radius: 50%;
+      position: relative;
+    }
+
+    .capsule .circle::after {
       content: "";
       position: absolute;
-      left: 2px;
-      top: 2px;
-      width: 12px;
-      height: 4px;
-      border-radius: 2px;
-      background: var(--green);
+      inset: 4px;
+      border-radius: 50%;
+      background: #050910;
     }
 
     .app {
-      height: calc(100% - 34px);
+      height: calc(100% - 104px);
       display: flex;
       flex-direction: column;
       background: var(--page);
@@ -187,7 +283,7 @@
     .content {
       flex: 1;
       overflow-y: auto;
-      padding: 16px 18px 18px;
+      padding: 16px 18px 22px;
       scrollbar-width: none;
     }
 
@@ -195,49 +291,365 @@
       display: none;
     }
 
-    .hero {
-      padding: 22px 18px;
-      border-radius: 24px;
+    .home-content {
+      padding: 0 18px 18px;
+      background: linear-gradient(180deg, #f1f6ff 0%, #f6f8fb 42%, #f5f7fb 100%);
+    }
+
+    .home-hero {
+      min-height: 178px;
+      margin: 0 -18px;
+      padding: 30px 24px 76px;
       color: #ffffff;
       background:
-        linear-gradient(135deg, rgba(24, 103, 242, 0.98), rgba(11, 47, 120, 0.96)),
-        radial-gradient(circle at 92% 12%, rgba(24, 182, 123, 0.42), transparent 26%);
-      box-shadow: 0 16px 32px rgba(24, 103, 242, 0.22);
+        linear-gradient(90deg, rgba(24, 101, 230, 0.98) 0%, rgba(47, 124, 246, 0.9) 52%, rgba(47, 124, 246, 0.64) 100%),
+        radial-gradient(circle at 86% 22%, rgba(255, 255, 255, 0.2), transparent 22%),
+        linear-gradient(135deg, #176be8, #4697ff);
       position: relative;
       overflow: hidden;
     }
 
-    .hero::after {
+    .home-hero::before {
       content: "";
       position: absolute;
-      right: -34px;
-      bottom: -46px;
-      width: 150px;
-      height: 150px;
-      border: 22px solid rgba(255, 255, 255, 0.1);
-      border-radius: 50%;
+      inset: 0;
+      background:
+        linear-gradient(110deg, transparent 0 56%, rgba(255, 255, 255, 0.13) 56.3% 56.8%, transparent 57.1%),
+        linear-gradient(105deg, transparent 0 68%, rgba(255, 255, 255, 0.12) 68.3% 68.8%, transparent 69.1%),
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 26px);
+      opacity: 0.45;
     }
 
-    .hero h1,
-    .page-title h2 {
+    .home-hero::after {
+      content: "";
+      position: absolute;
+      right: -12px;
+      bottom: 20px;
+      width: 164px;
+      height: 92px;
+      border-radius: 10px;
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08)),
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.24) 0 1px, transparent 1px 18px);
+      box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.14);
+      transform: skewX(-8deg);
+    }
+
+    .hero-turbine {
+      position: absolute;
+      right: 120px;
+      top: 28px;
+      width: 88px;
+      height: 122px;
+      opacity: 0.24;
+    }
+
+    .hero-turbine::before {
+      content: "";
+      position: absolute;
+      left: 42px;
+      top: 36px;
+      width: 2px;
+      height: 86px;
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    .hero-turbine::after {
+      content: "";
+      position: absolute;
+      left: 34px;
+      top: 26px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.95) 0 7px, transparent 7px),
+        linear-gradient(30deg, transparent 0 8px, rgba(255,255,255,0.75) 8px 11px, transparent 11px),
+        linear-gradient(150deg, transparent 0 8px, rgba(255,255,255,0.75) 8px 11px, transparent 11px);
+      box-shadow: 48px 32px 0 -3px rgba(255, 255, 255, 0.55);
+    }
+
+    .home-hero h2 {
+      position: relative;
+      z-index: 1;
       margin: 0;
+      font-size: 30px;
+      line-height: 1.16;
+      letter-spacing: 0;
+      font-weight: 900;
+    }
+
+    .home-hero p {
+      position: relative;
+      z-index: 1;
+      margin: 14px 0 0;
+      font-size: 17px;
+      line-height: 1.45;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .search-box {
+      height: 68px;
+      margin: -34px 0 18px;
+      padding: 0 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border: 0;
+      border-radius: 26px;
+      background: rgba(255, 255, 255, 0.96);
+      color: #8b93a0;
+      box-shadow: 0 16px 38px rgba(41, 78, 130, 0.14);
+      position: relative;
+      z-index: 2;
+      text-align: left;
+      width: 100%;
+    }
+
+    .search-icon {
+      width: 24px;
+      height: 24px;
+      border: 3px solid #2d3440;
+      border-radius: 50%;
+      position: relative;
+      flex: 0 0 auto;
+    }
+
+    .search-icon::after {
+      content: "";
+      position: absolute;
+      right: -8px;
+      bottom: -7px;
+      width: 10px;
+      height: 3px;
+      border-radius: 999px;
+      background: #2d3440;
+      transform: rotate(45deg);
+    }
+
+    .search-text {
+      min-width: 0;
+      font-size: 16px;
+      color: #8a929f;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .home-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .home-action {
+      min-height: 84px;
+      padding: 16px 16px;
+      display: grid;
+      grid-template-columns: 52px minmax(0, 1fr) 15px;
+      gap: 12px;
+      align-items: center;
+      border: 0;
+      border-radius: 21px;
+      color: var(--ink);
+      background: #ffffff;
+      box-shadow: var(--shadow);
+      text-align: left;
+    }
+
+    .home-action.wide {
+      grid-column: 1 / -1;
+    }
+
+    .home-action h3 {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.2;
       letter-spacing: 0;
     }
 
-    .hero h1 {
-      max-width: 270px;
-      font-size: 24px;
+    .home-action p {
+      margin: 7px 0 0;
+      font-size: 13px;
       line-height: 1.25;
+      color: var(--muted);
     }
 
-    .hero p {
+    .chevron {
+      width: 12px;
+      height: 12px;
+      border-top: 2px solid #8b93a0;
+      border-right: 2px solid #8b93a0;
+      transform: rotate(45deg);
+      justify-self: end;
+    }
+
+    .home-icon,
+    .tab-svg,
+    .small-icon,
+    .course-icon {
+      color: var(--blue);
+    }
+
+    .home-icon {
+      width: 48px;
+      height: 48px;
+      display: block;
+      filter: drop-shadow(8px 8px 0 rgba(47, 124, 246, 0.22));
+    }
+
+    .panel {
+      margin-top: 12px;
+      padding: 16px;
+      border-radius: 20px;
+      background: #ffffff;
+      box-shadow: var(--shadow);
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .panel-head h3 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .panel-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .progress-stats {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .progress-divider {
+      height: 48px;
+      background: var(--line);
+    }
+
+    .progress-metric {
+      display: grid;
+      grid-template-columns: 54px minmax(0, 1fr);
+      gap: 12px;
+      align-items: center;
+    }
+
+    .metric-icon {
+      width: 54px;
+      height: 54px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #e9f0ff;
+      color: var(--blue);
       position: relative;
-      margin: 10px 0 0;
-      max-width: 275px;
-      color: rgba(255, 255, 255, 0.84);
-      font-size: 13px;
-      line-height: 1.55;
-      z-index: 1;
+    }
+
+    .metric-icon.green {
+      background: var(--green-soft);
+      color: var(--green);
+    }
+
+    .metric-icon svg {
+      width: 34px;
+      height: 34px;
+    }
+
+    .metric-copy span {
+      display: block;
+      font-size: 14px;
+      line-height: 1.2;
+      color: var(--muted);
+    }
+
+    .metric-copy strong {
+      display: inline-block;
+      margin-top: 5px;
+      color: var(--blue);
+      font-size: 29px;
+      line-height: 1;
+    }
+
+    .metric-copy strong.green {
+      color: var(--green);
+    }
+
+    .metric-copy em {
+      margin-left: 6px;
+      font-style: normal;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .course-list {
+      margin-top: 14px;
+      display: grid;
+    }
+
+    .course-row {
+      min-height: 72px;
+      display: grid;
+      grid-template-columns: 40px minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      border-top: 1px solid var(--line);
+    }
+
+    .course-row:first-child {
+      border-top: 0;
+    }
+
+    .course-icon {
+      width: 32px;
+      height: 32px;
+    }
+
+    .course-row h4 {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .course-meta {
+      margin-top: 7px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .pill {
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #f1f3f6;
+    }
+
+    .learn-btn {
+      height: 36px;
+      padding: 0 14px;
+      border: 0;
+      border-radius: 999px;
+      color: var(--blue);
+      background: var(--blue-soft);
+      font-weight: 800;
+      white-space: nowrap;
     }
 
     .card {
@@ -245,11 +657,6 @@
       border-radius: 18px;
       background: var(--card);
       box-shadow: 0 10px 30px rgba(19, 40, 73, 0.06);
-    }
-
-    .progress-card {
-      margin-top: 14px;
-      padding: 15px;
     }
 
     .row {
@@ -269,6 +676,17 @@
       color: var(--ink);
     }
 
+    .progress-card,
+    .task-card,
+    .record-card,
+    .suggest-card,
+    .course-card,
+    .profile-card,
+    .culture-card {
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+
     .progress-line {
       height: 8px;
       margin: 12px 0 10px;
@@ -282,34 +700,6 @@
       height: 100%;
       border-radius: inherit;
       background: linear-gradient(90deg, var(--blue), var(--green));
-    }
-
-    .metric-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .metric {
-      min-height: 56px;
-      padding: 9px 8px;
-      border-radius: 14px;
-      background: #f6f9fd;
-    }
-
-    .metric b {
-      display: block;
-      font-size: 18px;
-      line-height: 1.1;
-    }
-
-    .metric span {
-      display: block;
-      margin-top: 5px;
-      font-size: 11px;
-      color: var(--muted);
-      line-height: 1.2;
     }
 
     .section-head {
@@ -330,77 +720,8 @@
       font-weight: 700;
     }
 
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-
-    .feature-card {
-      min-height: 96px;
-      padding: 13px;
-      border: 0;
-      border-radius: 18px;
-      text-align: left;
-      color: var(--ink);
-      background: #ffffff;
-      box-shadow: 0 10px 28px rgba(17, 53, 99, 0.07);
-      cursor: pointer;
-      font: inherit;
-    }
-
-    .feature-card.wide {
-      grid-column: 1 / -1;
-      min-height: 82px;
-    }
-
-    .icon {
-      width: 32px;
-      height: 32px;
-      display: grid;
-      place-items: center;
-      margin-bottom: 10px;
-      border-radius: 12px;
-      background: var(--blue-soft);
-      color: var(--blue);
-      font-size: 14px;
-      font-weight: 900;
-    }
-
-    .feature-card:nth-child(2) .icon,
-    .feature-card:nth-child(5) .icon {
-      background: var(--green-soft);
-      color: var(--green);
-    }
-
-    .feature-card h4 {
-      margin: 0;
-      font-size: 14px;
-      line-height: 1.35;
-    }
-
-    .feature-card p {
-      margin: 7px 0 0;
-      font-size: 11px;
-      line-height: 1.4;
-      color: var(--muted);
-    }
-
-    .task-card,
     .record-card,
-    .suggest-card,
-    .course-card,
-    .profile-card,
     .culture-card {
-      padding: 14px;
-      margin-bottom: 10px;
-    }
-
-    .task-card {
-      border-left: 4px solid var(--green);
-    }
-
-    .record-card {
       display: flex;
       gap: 11px;
       align-items: center;
@@ -435,8 +756,10 @@
     }
 
     .page-title h2 {
+      margin: 0;
       font-size: 20px;
       line-height: 1.2;
+      letter-spacing: 0;
     }
 
     .page-title p {
@@ -446,16 +769,16 @@
     }
 
     .upload-zone {
+      width: 100%;
       height: 178px;
-      border: 1.5px dashed rgba(24, 103, 242, 0.4);
+      border: 1.5px dashed rgba(47, 124, 246, 0.4);
       border-radius: 22px;
       display: grid;
       place-items: center;
       text-align: center;
       background:
-        linear-gradient(180deg, rgba(24, 103, 242, 0.06), rgba(24, 182, 123, 0.05)),
+        linear-gradient(180deg, rgba(47, 124, 246, 0.06), rgba(41, 189, 132, 0.05)),
         #ffffff;
-      cursor: pointer;
     }
 
     .camera {
@@ -501,6 +824,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 12px;
       padding: 10px 11px;
       border-radius: 12px;
       background: #f6f9fd;
@@ -570,46 +894,6 @@
       min-height: 520px;
     }
 
-    .api-panel {
-      padding: 12px;
-      display: grid;
-      gap: 9px;
-      background: #ffffff;
-    }
-
-    .api-row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .api-row input {
-      min-width: 0;
-      flex: 1;
-      height: 38px;
-      padding: 0 10px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      outline: 0;
-      font: inherit;
-      font-size: 12px;
-      color: var(--ink);
-      background: #f8fbff;
-    }
-
-    .api-row button {
-      height: 38px;
-      padding: 0 12px;
-      border: 0;
-      border-radius: 12px;
-      color: #ffffff;
-      background: var(--green);
-      font: inherit;
-      font-size: 12px;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
     .api-status {
       min-height: 18px;
       margin: 0;
@@ -675,7 +959,6 @@
       flex: 1;
       border: 0;
       outline: 0;
-      font: inherit;
       font-size: 13px;
       color: var(--ink);
       padding: 8px 6px;
@@ -687,9 +970,7 @@
       border-radius: 13px;
       color: #ffffff;
       background: var(--blue);
-      font: inherit;
       font-weight: 800;
-      cursor: pointer;
     }
 
     .send-btn {
@@ -712,7 +993,7 @@
       padding: 8px 10px;
       border-radius: 999px;
       background: var(--blue-soft);
-      color: var(--blue-dark);
+      color: #174281;
       font-size: 12px;
       font-weight: 800;
     }
@@ -721,27 +1002,14 @@
       display: grid;
       gap: 8px;
       background:
-        linear-gradient(135deg, rgba(24, 103, 242, 0.08), rgba(24, 182, 123, 0.08)),
+        linear-gradient(135deg, rgba(47, 124, 246, 0.08), rgba(41, 189, 132, 0.08)),
         #ffffff;
     }
 
-    .course-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .culture-list {
+    .culture-list,
+    .stat-list {
       display: grid;
       gap: 10px;
-    }
-
-    .culture-card {
-      display: flex;
-      align-items: center;
-      gap: 11px;
     }
 
     .culture-index {
@@ -785,11 +1053,6 @@
       flex: 0 0 auto;
     }
 
-    .stat-list {
-      display: grid;
-      gap: 10px;
-    }
-
     .stat-item {
       padding: 13px 14px;
       display: flex;
@@ -811,14 +1074,14 @@
       width: 100%;
       height: 46px;
       margin-top: 12px;
-      box-shadow: 0 12px 24px rgba(24, 103, 242, 0.24);
+      box-shadow: 0 12px 24px rgba(47, 124, 246, 0.24);
     }
 
     .tabbar {
       height: 74px;
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      padding: 7px 8px 10px;
+      grid-template-columns: repeat(4, 1fr);
+      padding: 7px 10px 10px;
       border-top: 1px solid var(--line);
       background: rgba(255, 255, 255, 0.96);
       backdrop-filter: blur(12px);
@@ -827,25 +1090,19 @@
     .tab {
       border: 0;
       background: transparent;
-      color: #8a94a6;
+      color: #7f8794;
       display: grid;
       place-items: center;
       gap: 3px;
-      font: inherit;
-      font-size: 11px;
-      cursor: pointer;
+      font-size: 12px;
       border-radius: 14px;
     }
 
-    .tab-mark {
-      width: 26px;
-      height: 22px;
-      display: grid;
-      place-items: center;
-      font-size: 13px;
-      font-weight: 900;
-      border-radius: 9px;
-      background: transparent;
+    .tab-svg {
+      width: 28px;
+      height: 28px;
+      color: currentColor;
+      stroke-width: 2.2;
     }
 
     .tab.active {
@@ -853,20 +1110,26 @@
       font-weight: 800;
     }
 
-    .tab.active .tab-mark {
-      color: #ffffff;
-      background: var(--blue);
-    }
-
-    @media (max-height: 900px) {
+    @media (max-height: 970px) and (min-width: 461px) {
       .phone {
-        transform: scale(calc((100vh - 28px) / 844));
+        transform: scale(calc((100vh - 30px) / 932));
       }
     }
 
     @media (max-width: 460px) {
+      body {
+        display: block;
+        overflow: hidden;
+      }
+
       .stage {
+        width: 100vw;
+        height: 100vh;
         padding: 0;
+      }
+
+      .stage::before {
+        display: none;
       }
 
       .phone {
@@ -878,103 +1141,193 @@
         box-shadow: none;
       }
 
-      .phone::before {
-        display: none;
+      .screen {
+        border: 0;
+        border-radius: 0;
       }
 
-      .screen {
-        border-radius: 0;
+      .nav-title h1 {
+        font-size: 19px;
+      }
+
+      .home-hero h2 {
+        font-size: 28px;
+      }
+
+      .home-hero p {
+        font-size: 16px;
+      }
+
+      .home-action {
+        grid-template-columns: 46px minmax(0, 1fr) 12px;
+        padding: 14px 13px;
+      }
+
+      .home-action h3 {
+        font-size: 16px;
+      }
+
+      .progress-stats {
+        gap: 12px;
       }
     }
   </style>
 </head>
 <body>
-  <main class="stage" aria-label="新能源维保 AI 实训助手小程序预览">
+  <main class="stage" aria-label="新能源维保 AI 学训助手小程序预览">
     <section class="phone">
       <div class="screen">
-        <div class="status-bar">
-          <span>09:41</span>
-          <div class="status-icons" aria-hidden="true">
-            <div class="signal"><span></span><span></span><span></span><span></span></div>
-            <div class="battery"></div>
+        <header class="mini-top">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-icons" aria-hidden="true">
+              <div class="signal"><span></span><span></span><span></span><span></span></div>
+              <div class="wifi"></div>
+              <div class="battery">100</div>
+            </div>
           </div>
-        </div>
+          <div class="nav-title">
+            <h1>新能源维保 AI 学训助手</h1>
+            <div class="capsule" aria-hidden="true">
+              <div class="dots"><span></span><span></span><span></span></div>
+              <span class="divider"></span>
+              <span class="circle"></span>
+            </div>
+          </div>
+        </header>
 
         <div class="app">
           <div class="pages">
             <section class="page active" id="home">
-              <div class="content">
-                <header class="hero">
-                  <h1>新能源维保 AI 实训助手</h1>
-                  <p>面向培训、实训、上岗的智能学习工具</p>
+              <div class="content home-content">
+                <header class="home-hero">
+                  <span class="hero-turbine" aria-hidden="true"></span>
+                  <h2>你好，今天继续学习吧</h2>
+                  <p>AI 赋能维保学习，提升技能更高效</p>
                 </header>
 
-                <article class="card progress-card">
-                  <div class="row">
-                    <div>
-                      <div class="label">今日学习进度</div>
-                      <div class="strong">已完成 68%</div>
+                <button class="search-box" type="button" data-target="qa">
+                  <span class="search-icon" aria-hidden="true"></span>
+                  <span class="search-text">搜索维保问题 / 术语 / 案例</span>
+                </button>
+
+                <div class="home-grid" aria-label="核心功能">
+                  <button class="home-action" type="button" data-target="qa">
+                    <svg class="home-icon" viewBox="0 0 48 48" aria-hidden="true">
+                      <rect x="7" y="8" width="28" height="28" rx="5" fill="none" stroke="currentColor" stroke-width="4" />
+                      <path d="M15 27l6-14 6 14M17 22h8" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+                      <path d="M31 23h10v14H29v-8" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round" />
+                      <path d="M35 27c1.2 4 3.4 6.5 6.2 8.2" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+                    </svg>
+                    <span><h3>术语翻译</h3><p>多语言翻译</p></span>
+                    <span class="chevron" aria-hidden="true"></span>
+                  </button>
+
+                  <button class="home-action" type="button" data-target="qa">
+                    <svg class="home-icon" viewBox="0 0 48 48" aria-hidden="true">
+                      <path d="M8 22c0-8 7-14 16-14s16 6 16 14-7 14-16 14c-2.2 0-4.2-.3-6.1-1L9 40l2.4-8.6A13.2 13.2 0 0 1 8 22Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round" />
+                      <path d="M17 22h.1M24 22h.1M31 22h.1" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" />
+                    </svg>
+                    <span><h3>AI维保问答</h3><p>7×24答疑</p></span>
+                    <span class="chevron" aria-hidden="true"></span>
+                  </button>
+
+                  <button class="home-action" type="button" data-target="practice">
+                    <svg class="home-icon" viewBox="0 0 48 48" aria-hidden="true">
+                      <path d="M10 25h28l3 5v7a5 5 0 0 1-5 5H12a5 5 0 0 1-5-5v-7l3-5Z" fill="currentColor" opacity="0.16" />
+                      <path d="M12 24v-5c0-4 3-7 7-7h10c4 0 7 3 7 7v5" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+                      <path d="M8 26h32l3 6v5a5 5 0 0 1-5 5H10a5 5 0 0 1-5-5v-5l3-6Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round" />
+                      <path d="M15 33l5 4M33 33l-5 4" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+                    </svg>
+                    <span><h3>VR实训辅助</h3><p>操作提醒</p></span>
+                    <span class="chevron" aria-hidden="true"></span>
+                  </button>
+
+                  <button class="home-action" type="button" data-target="learn">
+                    <svg class="home-icon" viewBox="0 0 48 48" aria-hidden="true">
+                      <rect x="12" y="10" width="24" height="32" rx="4" fill="none" stroke="currentColor" stroke-width="4" />
+                      <path d="M19 9h10l2 6H17l2-6Z" fill="currentColor" opacity="0.18" stroke="currentColor" stroke-width="3" stroke-linejoin="round" />
+                      <path d="M18 27l5 5 9-12" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    <span><h3>错题补学</h3><p>个性推荐</p></span>
+                    <span class="chevron" aria-hidden="true"></span>
+                  </button>
+
+                  <button class="home-action wide" type="button" data-target="learn" data-scroll="compliance">
+                    <svg class="home-icon" viewBox="0 0 48 48" aria-hidden="true">
+                      <path d="M9 17h30v23H9z" fill="currentColor" opacity="0.16" />
+                      <path d="M9 17h30v23H9zM14 13h20v4H14z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round" />
+                      <path d="M16 25h14M16 32h9" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+                    </svg>
+                    <span><h3>维保案例库</h3><p>故障案例查询</p></span>
+                    <span class="chevron" aria-hidden="true"></span>
+                  </button>
+                </div>
+
+                <article class="panel progress-panel">
+                  <div class="panel-head">
+                    <h3>今日学习进度</h3>
+                    <span class="panel-link">
+                      <svg class="small-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                        <rect x="4" y="5" width="16" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="2" />
+                        <path d="M8 3v4M16 3v4M4 10h16M9 15l2 2 4-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                      学习日历
+                    </span>
+                  </div>
+                  <div class="progress-stats">
+                    <div class="progress-metric">
+                      <span class="metric-icon">
+                        <svg viewBox="0 0 48 48" aria-hidden="true">
+                          <circle cx="24" cy="24" r="18" fill="currentColor" opacity="0.18" />
+                          <path d="M24 12v13l9 6" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                      </span>
+                      <span class="metric-copy"><span>已学习</span><strong>35</strong><em>分钟</em></span>
                     </div>
-                    <div class="label">目标 90 分钟</div>
-                  </div>
-                  <div class="progress-line"><span style="width: 68%"></span></div>
-                  <div class="metric-grid">
-                    <div class="metric"><b>42</b><span>学习分钟</span></div>
-                    <div class="metric"><b>3</b><span>任务完成</span></div>
-                    <div class="metric"><b>1</b><span>风险复盘</span></div>
+                    <span class="progress-divider"></span>
+                    <div class="progress-metric">
+                      <span class="metric-icon green">
+                        <svg viewBox="0 0 48 48" aria-hidden="true">
+                          <circle cx="24" cy="24" r="18" fill="currentColor" opacity="0.18" />
+                          <path d="M16 25l6 6 11-14" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                      </span>
+                      <span class="metric-copy"><span>已完成</span><strong class="green">2</strong><em>个任务</em></span>
+                    </div>
                   </div>
                 </article>
 
-                <div class="section-head">
-                  <h3>核心功能</h3>
-                  <span>智能实训闭环</span>
-                </div>
-                <div class="feature-grid">
-                  <button class="feature-card" data-target="qa">
-                    <span class="icon">术</span>
-                    <h4>AI术语翻译库</h4>
-                    <p>维保术语、缩写和跨语种表达查询</p>
-                  </button>
-                  <button class="feature-card" data-target="practice">
-                    <span class="icon">训</span>
-                    <h4>VR/实训操作辅助</h4>
-                    <p>拍照识别场景，提示步骤与风险</p>
-                  </button>
-                  <button class="feature-card" data-target="qa">
-                    <span class="icon">AI</span>
-                    <h4>7×24智能答疑</h4>
-                    <p>围绕检修、检测、法规即时问答</p>
-                  </button>
-                  <button class="feature-card" data-target="learn">
-                    <span class="icon">补</span>
-                    <h4>个性化纠错补学</h4>
-                    <p>定位薄弱点，推荐补学课程</p>
-                  </button>
-                  <button class="feature-card wide" data-target="learn" data-scroll="compliance">
-                    <span class="icon">合</span>
-                    <h4>海外文化与合规培训</h4>
-                    <p>海外维修沟通、标准法规、记录要求</p>
-                  </button>
-                </div>
-
-                <div class="section-head">
-                  <h3>今日推荐学习任务</h3>
-                  <span>开始训练</span>
-                </div>
-                <article class="card task-card">
-                  <p class="mini-title">高压下电流程强化训练</p>
-                  <p class="mini-copy">预计 18 分钟，完成后解锁绝缘检测案例题。</p>
-                </article>
-
-                <div class="section-head">
-                  <h3>最近实训记录</h3>
-                  <span>查看全部</span>
-                </div>
-                <article class="card record-card">
-                  <span class="record-dot"></span>
-                  <div>
-                    <p class="mini-title">高压电池包检修</p>
-                    <p class="mini-copy">昨日 16:20，安全确认步骤已通过。</p>
+                <article class="panel recommend-panel">
+                  <div class="panel-head">
+                    <h3>推荐学习</h3>
+                    <span class="panel-link">查看更多 <span class="chevron" aria-hidden="true"></span></span>
+                  </div>
+                  <div class="course-list">
+                    <div class="course-row">
+                      <svg class="course-icon" viewBox="0 0 32 32" aria-hidden="true">
+                        <rect x="7" y="4" width="18" height="24" rx="3" fill="none" stroke="currentColor" stroke-width="3" />
+                        <path d="M12 10h8M12 20h7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+                        <circle cx="21" cy="23" r="2" fill="currentColor" />
+                      </svg>
+                      <span>
+                        <h4>电池安全操作规范</h4>
+                        <span class="course-meta"><span class="pill">课程</span><span>12 分钟</span></span>
+                      </span>
+                      <button class="learn-btn" type="button" data-target="learn">去学习</button>
+                    </div>
+                    <div class="course-row">
+                      <svg class="course-icon" viewBox="0 0 32 32" aria-hidden="true">
+                        <rect x="7" y="4" width="18" height="24" rx="3" fill="none" stroke="currentColor" stroke-width="3" />
+                        <path d="M12 10h8M12 20h7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+                        <circle cx="21" cy="23" r="2" fill="currentColor" />
+                      </svg>
+                      <span>
+                        <h4>逆变器常见故障码解析</h4>
+                        <span class="course-meta"><span class="pill">课程</span><span>18 分钟</span></span>
+                      </span>
+                      <button class="learn-btn" type="button" data-target="learn">去学习</button>
+                    </div>
                   </div>
                 </article>
               </div>
@@ -986,7 +1339,7 @@
                 <p>拍照后模拟 AI 识别实训场景与风险。</p>
               </header>
               <div class="content">
-                <button class="upload-zone" id="uploadZone">
+                <button class="upload-zone" id="uploadZone" type="button">
                   <span>
                     <span class="camera"></span>
                     <span class="strong">拍照识别当前实训场景</span>
@@ -1021,7 +1374,7 @@
 
             <section class="page" id="qa">
               <header class="page-title">
-                <h2>AI答疑</h2>
+                <h2>AI维保问答</h2>
                 <p>接入 deepseek-v4-flash，围绕新能源维保实训进行问答。</p>
               </header>
               <div class="content chat">
@@ -1037,7 +1390,7 @@
                   <p class="api-status" id="apiStatus">当前由 Vercel 后端代理调用 deepseek/deepseek-v4-flash。</p>
                   <div class="input-row">
                     <input id="questionInput" type="text" placeholder="请输入你的维保问题" aria-label="请输入你的维保问题" />
-                    <button class="send-btn" id="sendBtn">发送</button>
+                    <button class="send-btn" id="sendBtn" type="button">发送</button>
                   </div>
                 </div>
               </div>
@@ -1045,7 +1398,7 @@
 
             <section class="page" id="learn">
               <header class="page-title">
-                <h2>学习中心</h2>
+                <h2>实训学习</h2>
                 <p>进度跟踪、薄弱点诊断与合规学习。</p>
               </header>
               <div class="content" id="learnContent">
@@ -1134,17 +1487,28 @@
                   <article class="card stat-item"><span>实训次数</span><b>8次</b></article>
                   <article class="card stat-item warning"><span>风险操作提醒</span><b>2次</b></article>
                 </div>
-                <button class="report-btn">查看个人学习报告</button>
+                <button class="report-btn" type="button">查看个人学习报告</button>
               </div>
             </section>
           </div>
 
           <nav class="tabbar" aria-label="小程序底部导航">
-            <button class="tab active" data-target="home"><span class="tab-mark">首</span><span>首页</span></button>
-            <button class="tab" data-target="practice"><span class="tab-mark">训</span><span>实训辅助</span></button>
-            <button class="tab" data-target="qa"><span class="tab-mark">问</span><span>AI答疑</span></button>
-            <button class="tab" data-target="learn"><span class="tab-mark">学</span><span>学习中心</span></button>
-            <button class="tab" data-target="mine"><span class="tab-mark">我</span><span>我的</span></button>
+            <button class="tab active" type="button" data-target="home">
+              <svg class="tab-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5 12 5l8 6.5V20a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1v-8.5Z" fill="currentColor" /></svg>
+              <span>首页</span>
+            </button>
+            <button class="tab" type="button" data-target="qa">
+              <svg class="tab-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6.5C5 4.6 6.6 3 8.5 3h7C17.4 3 19 4.6 19 6.5v5c0 1.9-1.6 3.5-3.5 3.5H11l-5 4v-4.3A3.5 3.5 0 0 1 5 12V6.5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" /><path d="M9 9h.1M12 9h.1M15 9h.1" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" /></svg>
+              <span>AI问答</span>
+            </button>
+            <button class="tab" type="button" data-target="practice">
+              <svg class="tab-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14l2 3v3a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-3l2-3Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" /><path d="M7 12V9c0-2 1.6-3.5 3.5-3.5h3C15.4 5.5 17 7 17 9v3M8 16l2 1.5M16 16l-2 1.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+              <span>实训学习</span>
+            </button>
+            <button class="tab" type="button" data-target="mine">
+              <svg class="tab-svg" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="2" /><path d="M4 21c1.3-4 4-6 8-6s6.7 2 8 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+              <span>我的</span>
+            </button>
           </nav>
         </div>
       </div>
@@ -1154,7 +1518,7 @@
   <script>
     const tabs = Array.from(document.querySelectorAll(".tab"));
     const pages = Array.from(document.querySelectorAll(".page"));
-    const featureCards = Array.from(document.querySelectorAll(".feature-card"));
+    const featureCards = Array.from(document.querySelectorAll("[data-target]"));
     const uploadZone = document.getElementById("uploadZone");
     const resultCard = document.getElementById("resultCard");
     const apiStatus = document.getElementById("apiStatus");
@@ -1198,12 +1562,13 @@
       }
     }
 
-    tabs.forEach((tab) => {
-      tab.addEventListener("click", () => switchPage(tab.dataset.target));
-    });
-
-    featureCards.forEach((card) => {
-      card.addEventListener("click", () => switchPage(card.dataset.target, card.dataset.scroll));
+    featureCards.forEach((item) => {
+      item.addEventListener("click", () => {
+        const target = item.dataset.target;
+        if (target) {
+          switchPage(target, item.dataset.scroll);
+        }
+      });
     });
 
     uploadZone.addEventListener("click", () => {
