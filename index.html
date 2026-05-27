@@ -5,407 +5,55 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>新能源维保 AI 学训助手</title>
   <style>
-    :root {
-      --blue: #2f7cf6;
-      --green: #27b980;
-      --blue-soft: #edf4ff;
-      --green-soft: #e8f8f1;
-      --warning: #f15b3a;
-      --warning-soft: #fff0ea;
-      --ink: #111827;
-      --muted: #7a8494;
-      --line: #e7edf6;
-      --page: #f4f7fb;
-      --card: #fff;
-      --shadow: 0 10px 26px rgba(22, 48, 84, 0.08);
-      --shadow-strong: 0 24px 70px rgba(28, 63, 118, 0.22);
-    }
-
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-      font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif;
-      color: var(--ink);
-      background:
-        radial-gradient(circle at 12% 12%, rgba(47, 124, 246, 0.16), transparent 30%),
-        radial-gradient(circle at 88% 82%, rgba(39, 185, 128, 0.12), transparent 32%),
-        linear-gradient(135deg, #e8f0ff 0%, #f8fbff 52%, #eefbf6 100%);
-    }
-    button, input { font: inherit; }
-    button { cursor: pointer; }
-
-    .stage {
-      width: min(100vw, 1120px);
-      height: 100vh;
-      display: grid;
-      place-items: center;
-      padding: 18px;
-      position: relative;
-    }
-    .stage::before {
-      content: "";
-      position: absolute;
-      width: 620px;
-      height: 620px;
-      border: 1px solid rgba(47, 124, 246, 0.12);
-      border-radius: 50%;
-      transform: translate(-230px, -120px);
-    }
-
-    .phone {
-      width: 390px;
-      height: 780px;
-      padding: 8px;
-      border-radius: 38px;
-      background: #fff;
-      box-shadow: var(--shadow-strong);
-      position: relative;
-      z-index: 1;
-    }
-    .screen {
-      height: 100%;
-      overflow: hidden;
-      border-radius: 30px;
-      background: var(--page);
-      border: 1px solid rgba(199, 211, 229, 0.7);
-    }
-
-    .mini-top {
-      height: 78px;
-      background: rgba(255, 255, 255, 0.98);
-      border-bottom: 1px solid rgba(226, 232, 242, 0.84);
-      position: relative;
-      z-index: 5;
-    }
-    .status-bar {
-      height: 29px;
-      padding: 9px 22px 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 14px;
-      line-height: 1;
-      font-weight: 800;
-      color: #050910;
-    }
-    .status-icons { display: flex; gap: 7px; align-items: center; }
-    .signal { width: 19px; height: 13px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; align-items: end; }
-    .signal span { display: block; width: 3px; border-radius: 3px; background: #050910; }
-    .signal span:nth-child(1) { height: 5px; }
-    .signal span:nth-child(2) { height: 8px; }
-    .signal span:nth-child(3) { height: 11px; }
-    .signal span:nth-child(4) { height: 13px; }
-    .wifi { width: 18px; height: 13px; position: relative; }
-    .wifi::before, .wifi::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      border: 2.4px solid #050910;
-      border-color: #050910 transparent transparent transparent;
-      border-radius: 50%;
-      transform: translateX(-50%);
-    }
-    .wifi::before { top: 0; width: 21px; height: 21px; }
-    .wifi::after { top: 6px; width: 12px; height: 12px; }
-    .battery {
-      width: 27px;
-      height: 13px;
-      display: grid;
-      place-items: center;
-      border: 1.6px solid #050910;
-      border-radius: 4px;
-      position: relative;
-      font-size: 7px;
-      font-weight: 900;
-      line-height: 1;
-    }
-    .battery::before { content: ""; position: absolute; right: -4px; top: 4px; width: 2px; height: 5px; border-radius: 1px; background: #050910; }
-
-    .nav-title {
-      height: 49px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      padding: 0 104px 0 14px;
-    }
-    .nav-title h1 {
-      margin: 0;
-      font-size: 17px;
-      line-height: 1;
-      letter-spacing: 0;
-      white-space: nowrap;
-      color: #050910;
-    }
-    .capsule {
-      position: absolute;
-      right: 12px;
-      top: 8px;
-      width: 76px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      border: 1px solid #e5eaf2;
-      border-radius: 999px;
-      background: #fff;
-      box-shadow: 0 4px 14px rgba(22, 36, 58, 0.08);
-    }
-    .capsule .dots { display: flex; gap: 4px; }
-    .capsule .dots span { width: 5px; height: 5px; border-radius: 50%; background: #050910; }
-    .capsule .divider { width: 1px; height: 16px; background: #e4e8ef; }
-    .capsule .circle { width: 18px; height: 18px; border: 3px solid #050910; border-radius: 50%; position: relative; }
-    .capsule .circle::after { content: ""; position: absolute; inset: 3px; border-radius: 50%; background: #050910; }
-
-    .app { height: calc(100% - 78px); display: flex; flex-direction: column; background: var(--page); }
-    .pages { flex: 1; overflow: hidden; position: relative; }
-    .page { height: 100%; display: none; flex-direction: column; overflow: hidden; }
-    .page.active { display: flex; }
-    .content { flex: 1; overflow-y: auto; padding: 12px 14px 16px; scrollbar-width: none; }
-    .content::-webkit-scrollbar { display: none; }
-
-    .home-content { padding: 0 14px 12px; background: linear-gradient(180deg, #f1f6ff 0%, #f6f8fb 45%, #f5f7fb 100%); }
-    .home-hero {
-      height: 132px;
-      margin: 0 -14px;
-      padding: 22px 22px 52px;
-      color: #fff;
-      background:
-        linear-gradient(90deg, rgba(24, 101, 230, 0.98), rgba(47, 124, 246, 0.88) 55%, rgba(47, 124, 246, 0.62)),
-        linear-gradient(135deg, #176be8, #4697ff);
-      position: relative;
-      overflow: hidden;
-    }
-    .home-hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(110deg, transparent 0 56%, rgba(255, 255, 255, 0.13) 56.3% 56.8%, transparent 57.1%),
-        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 22px);
-      opacity: 0.5;
-    }
-    .home-hero::after {
-      content: "";
-      position: absolute;
-      right: -12px;
-      bottom: 14px;
-      width: 145px;
-      height: 76px;
-      border-radius: 9px;
-      background:
-        linear-gradient(90deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08)),
-        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.24) 0 1px, transparent 1px 16px);
-      box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.14);
-      transform: skewX(-8deg);
-    }
-    .hero-turbine { position: absolute; right: 110px; top: 20px; width: 74px; height: 98px; opacity: 0.23; }
-    .hero-turbine::before { content: ""; position: absolute; left: 35px; top: 32px; width: 2px; height: 66px; background: rgba(255, 255, 255, 0.8); }
-    .hero-turbine::after {
-      content: "";
-      position: absolute;
-      left: 29px;
-      top: 22px;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background:
-        linear-gradient(90deg, rgba(255, 255, 255, 0.95) 0 6px, transparent 6px),
-        linear-gradient(30deg, transparent 0 7px, rgba(255, 255, 255, 0.75) 7px 10px, transparent 10px),
-        linear-gradient(150deg, transparent 0 7px, rgba(255, 255, 255, 0.75) 7px 10px, transparent 10px);
-      box-shadow: 40px 27px 0 -4px rgba(255, 255, 255, 0.55);
-    }
-    .home-hero h2 { position: relative; z-index: 1; margin: 0; font-size: 23px; line-height: 1.1; letter-spacing: 0; font-weight: 900; white-space: nowrap; }
-    .home-hero p { position: relative; z-index: 1; margin: 11px 0 0; font-size: 14px; line-height: 1.15; color: rgba(255, 255, 255, 0.9); white-space: nowrap; }
-
-    .search-box {
-      height: 50px;
-      margin: -25px 0 11px;
-      padding: 0 15px;
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      border: 0;
-      border-radius: 19px;
-      background: rgba(255, 255, 255, 0.98);
-      color: #8b93a0;
-      box-shadow: 0 10px 24px rgba(41, 78, 130, 0.13);
-      position: relative;
-      z-index: 2;
-      text-align: left;
-      width: 100%;
-    }
-    .search-icon { width: 20px; height: 20px; border: 2.4px solid #2d3440; border-radius: 50%; position: relative; flex: 0 0 auto; }
-    .search-icon::after { content: ""; position: absolute; right: -7px; bottom: -6px; width: 8px; height: 2.4px; border-radius: 999px; background: #2d3440; transform: rotate(45deg); }
-    .search-text { min-width: 0; font-size: 13px; color: #8a929f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-    .home-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
-    .home-action {
-      min-height: 62px;
-      padding: 10px 10px;
-      display: grid;
-      grid-template-columns: 34px minmax(0, 1fr) 8px;
-      gap: 9px;
-      align-items: center;
-      border: 0;
-      border-radius: 16px;
-      color: var(--ink);
-      background: #fff;
-      box-shadow: var(--shadow);
-      text-align: left;
-    }
-    .home-action.wide { grid-column: 1 / -1; min-height: 60px; }
-    .home-action h3 { margin: 0; font-size: 13px; line-height: 1.05; letter-spacing: 0; white-space: nowrap; }
-    .home-action p { margin: 5px 0 0; font-size: 10.5px; line-height: 1.05; color: var(--muted); white-space: nowrap; }
-    .home-copy { min-width: 0; }
-    .chevron { width: 9px; height: 9px; border-top: 2px solid #8b93a0; border-right: 2px solid #8b93a0; transform: rotate(45deg); justify-self: end; }
-    .home-icon, .tab-svg, .small-icon, .course-icon { color: var(--blue); }
-    .home-icon { width: 34px; height: 34px; display: block; filter: drop-shadow(5px 5px 0 rgba(47, 124, 246, 0.18)); }
-
-    .panel { margin-top: 10px; padding: 11px 12px; border-radius: 16px; background: #fff; box-shadow: var(--shadow); }
-    .panel-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-    .panel-head h3 { margin: 0; font-size: 15px; line-height: 1.1; letter-spacing: 0; white-space: nowrap; }
-    .panel-link { display: inline-flex; align-items: center; gap: 5px; color: var(--muted); font-size: 11px; white-space: nowrap; }
-
-    .progress-stats { margin-top: 12px; display: grid; grid-template-columns: 1fr 1px 1fr; align-items: center; gap: 10px; }
-    .progress-divider { height: 38px; background: var(--line); }
-    .progress-metric { display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 9px; align-items: center; }
-    .metric-icon { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 50%; background: #e9f0ff; color: var(--blue); }
-    .metric-icon.green { background: var(--green-soft); color: var(--green); }
-    .metric-icon svg { width: 26px; height: 26px; }
-    .metric-copy { min-width: 0; white-space: nowrap; }
-    .metric-copy span { display: block; font-size: 11px; line-height: 1.05; color: var(--muted); white-space: nowrap; }
-    .metric-copy strong { display: inline-block; margin-top: 4px; color: var(--blue); font-size: 22px; line-height: 1; }
-    .metric-copy strong.green { color: var(--green); }
-    .metric-copy em { margin-left: 4px; font-style: normal; font-size: 11px; color: var(--muted); }
-
-    .course-list { margin-top: 9px; display: grid; }
-    .course-row { min-height: 54px; display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 8px; align-items: center; border-top: 1px solid var(--line); }
-    .course-row:first-child { border-top: 0; }
-    .course-icon { width: 25px; height: 25px; }
-    .course-row h4 { margin: 0; font-size: 12px; line-height: 1.05; letter-spacing: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .course-meta { margin-top: 5px; display: flex; align-items: center; gap: 7px; font-size: 10px; color: var(--muted); white-space: nowrap; }
-    .pill { padding: 2px 6px; border-radius: 999px; background: #f1f3f6; }
-    .learn-btn { height: 27px; padding: 0 10px; border: 0; border-radius: 999px; color: var(--blue); background: var(--blue-soft); font-size: 11px; font-weight: 800; white-space: nowrap; }
-
-    .card { border: 1px solid var(--line); border-radius: 15px; background: var(--card); box-shadow: 0 8px 24px rgba(19, 40, 73, 0.06); }
-    .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-    .label { font-size: 12px; color: var(--muted); }
-    .strong { font-weight: 800; color: var(--ink); }
-    .progress-card, .task-card, .record-card, .suggest-card, .course-card, .profile-card, .culture-card { padding: 12px; margin-bottom: 9px; }
-    .progress-line { height: 8px; margin: 11px 0 9px; overflow: hidden; border-radius: 999px; background: #e8eef7; }
-    .progress-line span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--blue), var(--green)); }
-    .section-head { margin: 15px 2px 8px; display: flex; justify-content: space-between; align-items: center; }
-    .section-head h3 { margin: 0; font-size: 15px; }
-    .section-head span { font-size: 12px; color: var(--blue); font-weight: 700; }
-    .record-card, .culture-card { display: flex; gap: 10px; align-items: center; }
-    .record-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 5px var(--green-soft); flex: 0 0 auto; }
-    .mini-title { margin: 0; font-size: 13px; font-weight: 800; }
-    .mini-copy { margin: 5px 0 0; font-size: 12px; line-height: 1.45; color: var(--muted); }
-
-    .page-title { padding: 13px 15px 10px; background: #f8fbff; border-bottom: 1px solid rgba(230, 236, 245, 0.8); }
-    .page-title h2 { margin: 0; font-size: 17px; line-height: 1.15; letter-spacing: 0; }
-    .page-title p { margin: 6px 0 0; color: var(--muted); font-size: 12px; }
-    .upload-zone { width: 100%; height: 138px; border: 1.5px dashed rgba(47, 124, 246, 0.4); border-radius: 19px; display: grid; place-items: center; text-align: center; background: linear-gradient(180deg, rgba(47, 124, 246, 0.06), rgba(39, 185, 128, 0.05)), #fff; }
-    .camera { width: 52px; height: 39px; margin: 0 auto 9px; border: 4px solid var(--blue); border-radius: 12px; position: relative; }
-    .camera::before { content: ""; position: absolute; top: -10px; left: 14px; width: 20px; height: 10px; border-radius: 8px 8px 0 0; background: var(--blue); }
-    .camera::after { content: ""; position: absolute; inset: 8px 15px; border-radius: 50%; border: 4px solid var(--green); }
-    .result-card { margin-top: 11px; padding: 13px; }
-    .result-grid { display: grid; gap: 8px; margin-top: 9px; }
-    .result-item { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 8px 10px; border-radius: 12px; background: #f6f9fd; font-size: 12px; }
-    .risk { padding: 3px 9px; border-radius: 999px; background: var(--warning-soft); color: var(--warning); font-weight: 800; }
-    .ordered-list { margin: 9px 0 0; padding: 0; list-style: none; counter-reset: step; display: grid; gap: 7px; }
-    .ordered-list li { min-height: 34px; display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 12px; background: #f6f9fd; font-size: 12px; line-height: 1.35; }
-    .ordered-list li::before { counter-increment: step; content: counter(step); width: 20px; height: 20px; display: grid; place-items: center; flex: 0 0 auto; border-radius: 50%; color: #fff; background: var(--blue); font-size: 11px; font-weight: 800; }
-    .alert { margin-top: 10px; padding: 11px; border-radius: 14px; color: #9c2f1b; background: var(--warning-soft); border: 1px solid rgba(241, 91, 58, 0.2); font-size: 12px; line-height: 1.45; font-weight: 700; }
-
-    .chat { display: flex; flex-direction: column; gap: 11px; min-height: 460px; }
-    .api-status { min-height: 18px; margin: 0; color: var(--muted); font-size: 11px; line-height: 1.45; }
-    .api-status.error { color: var(--warning); font-weight: 700; }
-    .chat-log { display: flex; flex-direction: column; gap: 10px; }
-    .bubble { max-width: 82%; padding: 10px 11px; border-radius: 14px; font-size: 12px; line-height: 1.55; box-shadow: 0 8px 20px rgba(17, 53, 99, 0.06); }
-    .bubble.user { margin-left: auto; color: #fff; background: var(--blue); border-bottom-right-radius: 5px; }
-    .bubble.ai { margin-right: auto; background: #fff; border: 1px solid var(--line); border-bottom-left-radius: 5px; }
-    .bubble.loading { color: var(--muted); }
-    .chat-tools { margin-top: auto; padding-top: 10px; }
-    .input-row { display: flex; gap: 8px; padding: 8px; border-radius: 16px; background: #fff; border: 1px solid var(--line); }
-    .input-row input { min-width: 0; flex: 1; border: 0; outline: 0; font-size: 12px; color: var(--ink); padding: 7px 6px; }
-    .send-btn, .report-btn { border: 0; border-radius: 12px; color: #fff; background: var(--blue); font-weight: 800; }
-    .send-btn { width: 48px; }
-    .send-btn:disabled { opacity: 0.58; cursor: not-allowed; }
-    .knowledge-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-    .tag { padding: 7px 9px; border-radius: 999px; background: var(--blue-soft); color: #174281; font-size: 12px; font-weight: 800; }
-    .course-card { display: grid; gap: 8px; background: linear-gradient(135deg, rgba(47, 124, 246, 0.08), rgba(39, 185, 128, 0.08)), #fff; }
-    .culture-list, .stat-list { display: grid; gap: 9px; }
-    .culture-index { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 9px; color: var(--green); background: var(--green-soft); font-weight: 900; flex: 0 0 auto; }
-    .quiz-card { padding: 14px; margin-top: 12px; border-radius: 16px; background: #fffaf7; border: 1px solid rgba(241, 91, 58, 0.18); }
-    .profile-top { padding: 16px; display: flex; gap: 13px; align-items: center; background: linear-gradient(135deg, #fff, #edf5ff); }
-    .avatar { width: 52px; height: 52px; display: grid; place-items: center; border-radius: 18px; color: #fff; background: linear-gradient(135deg, var(--blue), var(--green)); font-size: 20px; font-weight: 900; flex: 0 0 auto; }
-    .stat-item { padding: 12px 13px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
-    .stat-item b { font-size: 17px; color: var(--blue); }
-    .stat-item.warning b { color: var(--warning); }
-    .report-btn { width: 100%; height: 42px; margin-top: 12px; box-shadow: 0 12px 24px rgba(47, 124, 246, 0.24); }
-
-    .tabbar { height: 60px; display: grid; grid-template-columns: repeat(4, 1fr); padding: 6px 10px 8px; border-top: 1px solid var(--line); background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(12px); }
-    .tab { border: 0; background: transparent; color: #7f8794; display: grid; place-items: center; gap: 2px; font-size: 10.5px; border-radius: 12px; }
-    .tab-svg { width: 23px; height: 23px; color: currentColor; stroke-width: 2.1; }
-    .tab.active { color: var(--blue); font-weight: 800; }
-    .tab span { white-space: nowrap; }
-
-    @media (max-height: 820px) and (min-width: 461px) { .phone { transform: scale(calc((100vh - 28px) / 780)); } }
-    @media (max-width: 460px) {
-      body { display: block; overflow: hidden; }
-      .stage { width: 100vw; height: 100vh; padding: 0; }
-      .stage::before { display: none; }
-      .phone { width: min(100vw, calc(100vh * 8 / 16)); height: min(100vh, calc(100vw * 16 / 8)); padding: 0; border-radius: 0; transform: none; box-shadow: none; margin: auto; }
-      .screen { border: 0; border-radius: 0; }
-      .nav-title h1 { font-size: 16px; }
-      .capsule { right: 9px; }
-      .home-hero h2 { font-size: 22px; }
-      .home-hero p { font-size: 13px; }
-      .home-action h3 { font-size: 12.5px; }
-      .home-action p { font-size: 10px; }
-      .progress-stats { gap: 8px; }
-    }
+    :root{--blue:#2f7cf6;--green:#25b87a;--ink:#111827;--muted:#7b8493;--line:#e7edf6;--page:#f4f7fb;--soft:#edf4ff;--warn:#f15b3a;--shadow:0 10px 24px rgba(22,48,84,.08)}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;overflow:hidden;font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;color:var(--ink);background:linear-gradient(135deg,#e8f0ff,#fbfdff 55%,#effbf6)}
+    button,input{font:inherit}button{cursor:pointer}.stage{width:min(100vw,1120px);height:100vh;display:grid;place-items:center;padding:18px}.phone{width:390px;height:780px;padding:8px;border-radius:38px;background:#fff;box-shadow:0 24px 70px rgba(28,63,118,.22)}.screen{height:100%;overflow:hidden;border-radius:30px;background:var(--page);border:1px solid rgba(199,211,229,.7)}
+    .mini-top{height:78px;background:#fff;border-bottom:1px solid #e8eef7}.status{height:29px;padding:9px 22px 0;display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:800;color:#050910}.sys{display:flex;align-items:center;gap:7px}.signal{width:19px;height:13px;display:grid;grid-template-columns:repeat(4,1fr);gap:2px;align-items:end}.signal i{width:3px;border-radius:3px;background:#050910}.signal i:nth-child(1){height:5px}.signal i:nth-child(2){height:8px}.signal i:nth-child(3){height:11px}.signal i:nth-child(4){height:13px}.wifi{width:18px;height:13px;position:relative}.wifi:before,.wifi:after{content:"";position:absolute;left:50%;border:2.3px solid #050910;border-color:#050910 transparent transparent;border-radius:50%;transform:translateX(-50%)}.wifi:before{top:0;width:21px;height:21px}.wifi:after{top:6px;width:12px;height:12px}.battery{width:27px;height:13px;display:grid;place-items:center;border:1.6px solid #050910;border-radius:4px;font-size:7px;font-weight:900;position:relative}.battery:after{content:"";position:absolute;right:-4px;top:4px;width:2px;height:5px;background:#050910;border-radius:1px}
+    .nav-title{height:49px;display:flex;align-items:center;justify-content:center;position:relative;padding:0 104px 0 14px}.nav-title h1{margin:0;font-size:17px;line-height:1;white-space:nowrap;letter-spacing:0}.capsule{position:absolute;right:12px;top:8px;width:76px;height:32px;border:1px solid #e5eaf2;border-radius:999px;background:#fff;box-shadow:0 4px 14px rgba(22,36,58,.08);display:flex;align-items:center;justify-content:space-around}.dots{display:flex;gap:4px}.dots i{width:5px;height:5px;border-radius:50%;background:#050910}.cap-line{width:1px;height:16px;background:#e4e8ef}.cap-dot{width:18px;height:18px;border:3px solid #050910;border-radius:50%;position:relative}.cap-dot:after{content:"";position:absolute;inset:3px;border-radius:50%;background:#050910}
+    .app{height:calc(100% - 78px);display:flex;flex-direction:column}.pages{flex:1;overflow:hidden}.page{height:100%;display:none;flex-direction:column;overflow:hidden}.page.active{display:flex}.content{flex:1;overflow-y:auto;padding:12px 14px 16px;scrollbar-width:none}.content::-webkit-scrollbar{display:none}
+    .home{padding:0 14px 12px;background:linear-gradient(180deg,#f1f6ff,#f6f8fb 46%,#f5f7fb)}.hero{height:124px;margin:0 -14px;padding:20px 22px 48px;color:#fff;background:linear-gradient(90deg,rgba(24,101,230,.98),rgba(47,124,246,.86) 56%,rgba(47,124,246,.6)),linear-gradient(135deg,#176be8,#4697ff);position:relative;overflow:hidden}.hero:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.08) 0 1px,transparent 1px 22px);opacity:.55}.hero:after{content:"";position:absolute;right:-12px;bottom:14px;width:145px;height:76px;border-radius:9px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.24) 0 1px,rgba(255,255,255,.08) 1px 16px);box-shadow:inset 0 0 0 2px rgba(255,255,255,.14);transform:skewX(-8deg)}.hero h2{position:relative;z-index:1;margin:0;font-size:23px;line-height:1.1;font-weight:900;letter-spacing:0;white-space:nowrap}.hero p{position:relative;z-index:1;margin:11px 0 0;font-size:14px;line-height:1.15;color:rgba(255,255,255,.9);white-space:nowrap}
+    .search{height:47px;margin:-23px 0 9px;padding:0 15px;display:flex;align-items:center;gap:11px;width:100%;border:0;border-radius:19px;background:#fff;color:#8a929f;box-shadow:0 10px 24px rgba(41,78,130,.13);position:relative;z-index:2;text-align:left}.magnify{width:20px;height:20px;border:2.4px solid #2d3440;border-radius:50%;position:relative;flex:0 0 auto}.magnify:after{content:"";position:absolute;right:-7px;bottom:-6px;width:8px;height:2.4px;border-radius:999px;background:#2d3440;transform:rotate(45deg)}.search span:last-child{min-width:0;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.action{min-height:58px;padding:9px 10px;display:grid;grid-template-columns:32px minmax(0,1fr) 8px;gap:8px;align-items:center;border:0;border-radius:16px;background:#fff;color:var(--ink);box-shadow:var(--shadow);text-align:left}.ico{width:32px;height:32px;border:3px solid var(--blue);border-radius:10px;color:var(--blue);display:grid;place-items:center;font-weight:900;font-size:15px;filter:drop-shadow(5px 5px 0 rgba(47,124,246,.16))}.action h3{margin:0;font-size:13px;line-height:1.05;white-space:nowrap;letter-spacing:0}.action p{margin:5px 0 0;font-size:10.5px;line-height:1.05;color:var(--muted);white-space:nowrap}.copy{min-width:0}.chev{width:9px;height:9px;border-top:2px solid #8b93a0;border-right:2px solid #8b93a0;transform:rotate(45deg);justify-self:end}
+    .panel,.card{background:#fff;border-radius:16px;box-shadow:var(--shadow)}.panel{margin-top:8px;padding:10px 12px}.head{display:flex;align-items:center;justify-content:space-between;gap:10px}.head h3{margin:0;font-size:15px;line-height:1.1;white-space:nowrap}.link{display:flex;align-items:center;gap:5px;color:var(--muted);font-size:11px;white-space:nowrap}.progress{margin-top:10px;display:grid;grid-template-columns:1fr 1px 1fr;gap:10px;align-items:center}.vline{height:38px;background:var(--line)}.metric{display:grid;grid-template-columns:38px minmax(0,1fr);gap:9px;align-items:center}.round{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#e9f0ff;color:var(--blue);font-weight:900}.round.ok{background:#e8f8f1;color:var(--green)}.metric span{display:block;font-size:11px;color:var(--muted);white-space:nowrap}.metric strong{display:inline-block;margin-top:4px;color:var(--blue);font-size:22px;line-height:1}.metric strong.ok{color:var(--green)}.metric em{margin-left:4px;font-style:normal;font-size:11px;color:var(--muted)}
+    .course-list{margin-top:7px}.course{min-height:50px;display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:8px;align-items:center;border-top:1px solid var(--line)}.course:first-child{border-top:0}.doc{width:24px;height:26px;border:3px solid var(--blue);border-radius:5px;position:relative}.doc:after{content:"";position:absolute;right:3px;bottom:3px;width:4px;height:4px;border-radius:50%;background:var(--blue)}.course h4{margin:0;font-size:12px;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.meta{margin-top:5px;display:flex;align-items:center;gap:7px;font-size:10px;color:var(--muted);white-space:nowrap}.pill,.case-meta span{padding:2px 6px;border-radius:999px;background:#f1f3f6}.learn-btn{height:27px;padding:0 10px;border:0;border-radius:999px;color:var(--blue);background:var(--soft);font-size:11px;font-weight:800;white-space:nowrap}
+    .page-title{padding:13px 15px 10px;background:#f8fbff;border-bottom:1px solid rgba(230,236,245,.8)}.page-title h2{margin:0;font-size:17px;line-height:1.15;letter-spacing:0}.page-title p{margin:6px 0 0;color:var(--muted);font-size:12px}.card{border:1px solid var(--line);box-shadow:0 8px 24px rgba(19,40,73,.06);padding:13px;margin-bottom:10px}.mini-title{margin:0;font-size:13px;font-weight:800}.mini-copy{margin:6px 0 0;font-size:12px;line-height:1.45;color:var(--muted)}.label{font-size:12px;color:var(--muted)}.strong{font-weight:800}.tool-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.tile{padding:11px;border-radius:14px;background:#f6f9fd;border:1px solid var(--line)}.tile b{display:block;font-size:13px;white-space:nowrap}.tile span{display:block;margin-top:5px;font-size:11px;line-height:1.35;color:var(--muted)}.translate{margin-top:10px;padding:12px;border-radius:14px;background:linear-gradient(135deg,rgba(47,124,246,.08),rgba(39,185,128,.08)),#fff;border:1px solid var(--line)}.trans-row{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin-top:10px}.chip{padding:9px;border-radius:12px;background:#fff;border:1px solid var(--line);font-size:12px;line-height:1.35}.arrow{color:var(--blue);font-weight:900}.case{display:grid;gap:8px}.case-meta{display:flex;flex-wrap:wrap;gap:7px;font-size:10px;color:var(--muted)}
+    .path{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:10px}.step{padding:10px 8px;border-radius:14px;background:#fff;border:1px solid var(--line);text-align:center;box-shadow:0 8px 20px rgba(19,40,73,.05)}.step b{display:block;color:var(--blue);font-size:15px}.step span{display:block;margin-top:4px;font-size:10.5px;color:var(--muted);white-space:nowrap}.upload{width:100%;height:138px;border:1.5px dashed rgba(47,124,246,.4);border-radius:19px;display:grid;place-items:center;text-align:center;background:linear-gradient(180deg,rgba(47,124,246,.06),rgba(39,185,128,.05)),#fff}.camera{width:52px;height:39px;margin:0 auto 9px;border:4px solid var(--blue);border-radius:12px;position:relative}.camera:before{content:"";position:absolute;top:-10px;left:14px;width:20px;height:10px;border-radius:8px 8px 0 0;background:var(--blue)}.camera:after{content:"";position:absolute;inset:8px 15px;border-radius:50%;border:4px solid var(--green)}.result{display:grid;gap:8px;margin-top:9px}.result div{display:flex;justify-content:space-between;gap:12px;padding:8px 10px;border-radius:12px;background:#f6f9fd;font-size:12px}.risk{padding:3px 9px;border-radius:999px;background:#fff0ea;color:var(--warn)}.todo{margin:9px 0 0;padding:0;list-style:none;counter-reset:step;display:grid;gap:7px}.todo li{min-height:34px;display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:12px;background:#f6f9fd;font-size:12px;line-height:1.35}.todo li:before{counter-increment:step;content:counter(step);width:20px;height:20px;display:grid;place-items:center;border-radius:50%;color:#fff;background:var(--blue);font-size:11px;font-weight:800}.alert{margin-top:10px;padding:11px;border-radius:14px;color:#9c2f1b;background:#fff0ea;border:1px solid rgba(241,91,58,.2);font-size:12px;line-height:1.45;font-weight:700}
+    .chat{display:flex;flex-direction:column;gap:11px;min-height:460px}.chat-log{display:flex;flex-direction:column;gap:10px}.bubble{max-width:82%;padding:10px 11px;border-radius:14px;font-size:12px;line-height:1.55;box-shadow:0 8px 20px rgba(17,53,99,.06)}.bubble.user{margin-left:auto;color:#fff;background:var(--blue);border-bottom-right-radius:5px}.bubble.ai{margin-right:auto;background:#fff;border:1px solid var(--line);border-bottom-left-radius:5px}.bubble.loading{color:var(--muted)}.chat-tools{margin-top:auto;padding-top:10px}.api{min-height:18px;margin:0;color:var(--muted);font-size:11px;line-height:1.45}.api.error{color:var(--warn);font-weight:700}.input-row{display:flex;gap:8px;padding:8px;border-radius:16px;background:#fff;border:1px solid var(--line)}.input-row input{min-width:0;flex:1;border:0;outline:0;font-size:12px;color:var(--ink);padding:7px 6px}.send,.report{border:0;border-radius:12px;color:#fff;background:var(--blue);font-weight:800}.send{width:48px}.send:disabled{opacity:.58}.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.tag{padding:7px 9px;border-radius:999px;background:var(--soft);color:#174281;font-size:12px;font-weight:800}.bar{height:8px;margin:11px 0 9px;overflow:hidden;border-radius:999px;background:#e8eef7}.bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--blue),var(--green))}
+    .section-head{margin:15px 2px 8px;display:flex;justify-content:space-between;align-items:center}.section-head h3{margin:0;font-size:15px}.section-head span{font-size:12px;color:var(--blue);font-weight:700}.culture-summary{padding:13px;margin-bottom:10px;border-radius:16px;color:#11406d;background:linear-gradient(135deg,#eaf3ff,#edf9f3);border:1px solid #dce9f6}.culture-summary p{margin:6px 0 0;font-size:12px;line-height:1.45;color:#526174}.culture-card{display:flex;gap:10px;align-items:center}.idx{width:28px;height:28px;display:grid;place-items:center;border-radius:9px;color:var(--green);background:#e8f8f1;font-weight:900;flex:0 0 auto}.profile{display:flex;gap:13px;align-items:center;background:linear-gradient(135deg,#fff,#edf5ff)}.avatar{width:52px;height:52px;display:grid;place-items:center;border-radius:18px;color:#fff;background:linear-gradient(135deg,var(--blue),var(--green));font-size:20px;font-weight:900;flex:0 0 auto}.stat{display:flex;justify-content:space-between;align-items:center;font-size:13px}.stat b{font-size:17px;color:var(--blue)}.stat.warn b{color:var(--warn)}.report{width:100%;height:42px;margin-top:2px;box-shadow:0 12px 24px rgba(47,124,246,.24)}
+    .tabbar{height:60px;display:grid;grid-template-columns:repeat(4,1fr);padding:6px 10px 8px;border-top:1px solid var(--line);background:rgba(255,255,255,.96);backdrop-filter:blur(12px)}.tab{border:0;background:transparent;color:#7f8794;display:grid;place-items:center;gap:2px;font-size:10.5px;border-radius:12px}.tab i{width:23px;height:23px;display:grid;place-items:center;font-style:normal;font-size:18px}.tab.active{color:var(--blue);font-weight:800}.tab span{white-space:nowrap}
+    @media (max-height:820px) and (min-width:461px){.phone{transform:scale(calc((100vh - 28px)/780))}}@media (max-width:460px){body{display:block;overflow:hidden}.stage{width:100vw;height:100vh;padding:0}.phone{width:min(100vw,calc(100vh*8/16));height:min(100vh,calc(100vw*16/8));padding:0;border-radius:0;box-shadow:none;margin:auto}.screen{border:0;border-radius:0}.nav-title h1{font-size:16px}.capsule{right:9px}.hero h2{font-size:22px}.hero p{font-size:13px}.action h3{font-size:12.5px}.action p{font-size:10px}}
   </style>
 </head>
 <body>
   <main class="stage" aria-label="新能源维保 AI 学训助手小程序预览">
     <section class="phone"><div class="screen">
-      <header class="mini-top"><div class="status-bar"><span>9:41</span><div class="status-icons" aria-hidden="true"><div class="signal"><span></span><span></span><span></span><span></span></div><div class="wifi"></div><div class="battery">100</div></div></div><div class="nav-title"><h1>新能源维保 AI 学训助手</h1><div class="capsule" aria-hidden="true"><div class="dots"><span></span><span></span><span></span></div><span class="divider"></span><span class="circle"></span></div></div></header>
+      <header class="mini-top"><div class="status"><span>9:41</span><div class="sys" aria-hidden="true"><span class="signal"><i></i><i></i><i></i><i></i></span><span class="wifi"></span><span class="battery">100</span></div></div><div class="nav-title"><h1>新能源维保 AI 学训助手</h1><div class="capsule" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="cap-line"></span><span class="cap-dot"></span></div></div></header>
       <div class="app"><div class="pages">
-        <section class="page active" id="home"><div class="content home-content">
-          <header class="home-hero"><span class="hero-turbine" aria-hidden="true"></span><h2>你好，今天继续学习吧</h2><p>AI 赋能维保学习，提升技能更高效</p></header>
-          <button class="search-box" type="button" data-target="qa"><span class="search-icon" aria-hidden="true"></span><span class="search-text">搜索维保问题 / 术语 / 案例</span></button>
-          <div class="home-grid" aria-label="核心功能">
-            <button class="home-action" type="button" data-target="qa"><svg class="home-icon" viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="8" width="28" height="28" rx="5" fill="none" stroke="currentColor" stroke-width="4"/><path d="M15 27l6-14 6 14M17 22h8" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M31 23h10v14H29v-8" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/><path d="M35 27c1.2 4 3.4 6.5 6.2 8.2" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg><span class="home-copy"><h3>术语翻译</h3><p>多语言翻译</p></span><span class="chevron" aria-hidden="true"></span></button>
-            <button class="home-action" type="button" data-target="qa"><svg class="home-icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 22c0-8 7-14 16-14s16 6 16 14-7 14-16 14c-2.2 0-4.2-.3-6.1-1L9 40l2.4-8.6A13.2 13.2 0 0 1 8 22Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/><path d="M17 22h.1M24 22h.1M31 22h.1" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></svg><span class="home-copy"><h3>AI维保问答</h3><p>7×24答疑</p></span><span class="chevron" aria-hidden="true"></span></button>
-            <button class="home-action" type="button" data-target="practice"><svg class="home-icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M10 25h28l3 5v7a5 5 0 0 1-5 5H12a5 5 0 0 1-5-5v-7l3-5Z" fill="currentColor" opacity=".16"/><path d="M12 24v-5c0-4 3-7 7-7h10c4 0 7 3 7 7v5" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><path d="M8 26h32l3 6v5a5 5 0 0 1-5 5H10a5 5 0 0 1-5-5v-5l3-6Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/><path d="M15 33l5 4M33 33l-5 4" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg><span class="home-copy"><h3>VR实训辅助</h3><p>操作提醒</p></span><span class="chevron" aria-hidden="true"></span></button>
-            <button class="home-action" type="button" data-target="learn"><svg class="home-icon" viewBox="0 0 48 48" aria-hidden="true"><rect x="12" y="10" width="24" height="32" rx="4" fill="none" stroke="currentColor" stroke-width="4"/><path d="M19 9h10l2 6H17l2-6Z" fill="currentColor" opacity=".18" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><path d="M18 27l5 5 9-12" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="home-copy"><h3>错题补学</h3><p>个性推荐</p></span><span class="chevron" aria-hidden="true"></span></button>
-            <button class="home-action wide" type="button" data-target="learn" data-scroll="compliance"><svg class="home-icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M9 17h30v23H9z" fill="currentColor" opacity=".16"/><path d="M9 17h30v23H9zM14 13h20v4H14z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/><path d="M16 25h14M16 32h9" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg><span class="home-copy"><h3>维保案例库</h3><p>故障案例查询</p></span><span class="chevron" aria-hidden="true"></span></button>
-          </div>
-          <article class="panel progress-panel"><div class="panel-head"><h3>今日学习进度</h3><span class="panel-link"><svg class="small-icon" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 3v4M16 3v4M4 10h16M9 15l2 2 4-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>学习日历</span></div><div class="progress-stats"><div class="progress-metric"><span class="metric-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="18" fill="currentColor" opacity=".18"/><path d="M24 12v13l9 6" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="metric-copy"><span>已学习</span><strong>35</strong><em>分钟</em></span></div><span class="progress-divider"></span><div class="progress-metric"><span class="metric-icon green"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="18" fill="currentColor" opacity=".18"/><path d="M16 25l6 6 11-14" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="metric-copy"><span>已完成</span><strong class="green">2</strong><em>个任务</em></span></div></div></article>
-          <article class="panel recommend-panel"><div class="panel-head"><h3>推荐学习</h3><span class="panel-link">查看更多 <span class="chevron" aria-hidden="true"></span></span></div><div class="course-list"><div class="course-row"><svg class="course-icon" viewBox="0 0 32 32" aria-hidden="true"><rect x="7" y="4" width="18" height="24" rx="3" fill="none" stroke="currentColor" stroke-width="3"/><path d="M12 10h8M12 20h7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><circle cx="21" cy="23" r="2" fill="currentColor"/></svg><span><h4>电池安全操作规范</h4><span class="course-meta"><span class="pill">课程</span><span>12 分钟</span></span></span><button class="learn-btn" type="button" data-target="learn">去学习</button></div><div class="course-row"><svg class="course-icon" viewBox="0 0 32 32" aria-hidden="true"><rect x="7" y="4" width="18" height="24" rx="3" fill="none" stroke="currentColor" stroke-width="3"/><path d="M12 10h8M12 20h7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><circle cx="21" cy="23" r="2" fill="currentColor"/></svg><span><h4>逆变器常见故障码解析</h4><span class="course-meta"><span class="pill">课程</span><span>18 分钟</span></span></span><button class="learn-btn" type="button" data-target="learn">去学习</button></div></div></article>
-        </div></section>
-        <section class="page" id="practice"><header class="page-title"><h2>VR / 实训操作辅助</h2><p>拍照后模拟 AI 识别实训场景与风险。</p></header><div class="content"><button class="upload-zone" id="uploadZone" type="button"><span><span class="camera"></span><span class="strong">拍照识别当前实训场景</span><span class="mini-copy">点击区域模拟上传并查看识别结果</span></span></button><article class="card result-card" id="resultCard"><p class="mini-title">AI 识别结果</p><div class="result-grid"><div class="result-item"><span>当前场景</span><b>高压电池包检修</b></div><div class="result-item"><span>当前步骤</span><b>维修前安全确认</b></div><div class="result-item"><span>风险等级</span><b class="risk">高</b></div></div></article><article class="card suggest-card"><p class="mini-title">AI 操作建议</p><ol class="ordered-list"><li>检查绝缘手套与护目镜</li><li>确认车辆断电状态</li><li>检查高压维修开关</li><li>完成安全确认后再进行拆卸</li></ol></article><div class="alert">安全提醒：未完成断电和绝缘确认前，禁止触碰高压部件。</div></div></section>
-        <section class="page" id="qa"><header class="page-title"><h2>AI维保问答</h2><p>接入 deepseek-v4-flash，围绕新能源维保实训进行问答。</p></header><div class="content chat"><div class="chat-log" id="chatLog"><div class="bubble user">维修高压电池包前为什么要做绝缘检测？</div><div class="bubble ai">绝缘检测可以判断高压系统是否存在漏电风险，避免触电和设备损坏。</div></div><article class="card suggest-card"><p class="mini-title">AI术语翻译库</p><p class="mini-copy">高压互锁 HVIL：用于确认高压连接器状态的安全回路。</p></article><div class="chat-tools"><p class="api-status" id="apiStatus">当前由 Vercel 后端代理调用 deepseek/deepseek-v4-flash。</p><div class="input-row"><input id="questionInput" type="text" placeholder="请输入你的维保问题" aria-label="请输入你的维保问题"/><button class="send-btn" id="sendBtn" type="button">发送</button></div></div></div></section>
-        <section class="page" id="learn"><header class="page-title"><h2>实训学习</h2><p>进度跟踪、薄弱点诊断与合规学习。</p></header><div class="content" id="learnContent"><article class="card progress-card"><div class="row"><div><div class="label">综合学习进度</div><div class="strong">当前完成 72%</div></div><div class="label">本周目标 5 课</div></div><div class="progress-line"><span style="width:72%"></span></div></article><div class="section-head"><h3>薄弱知识点</h3><span>AI诊断</span></div><div class="knowledge-tags"><span class="tag">高压下电流程</span><span class="tag">绝缘检测</span><span class="tag">电池包安全拆卸</span></div><div class="section-head"><h3>推荐补学课程</h3><span>去学习</span></div><article class="card course-card"><p class="mini-title">高压安全确认与绝缘检测实训课</p><p class="mini-copy">结合错误记录生成，重点复盘断电确认、检测仪使用与记录填写。</p><div class="course-meta"><span>预计 24 分钟</span><span>适合当前阶段</span></div></article><div class="section-head" id="compliance"><h3>海外文化与合规培训</h3><span>专项模块</span></div><div class="culture-list"><article class="card culture-card"><span class="culture-index">1</span><p class="mini-title">海外维修现场沟通规范</p></article><article class="card culture-card"><span class="culture-index">2</span><p class="mini-title">国外汽车技术标准介绍</p></article><article class="card culture-card"><span class="culture-index">3</span><p class="mini-title">新能源车辆安全法规</p></article><article class="card culture-card"><span class="culture-index">4</span><p class="mini-title">不同国家维修记录要求</p></article></div><article class="quiz-card"><p class="mini-title">今日合规小测</p><p class="mini-copy">维修记录为什么需要标准化填写？</p></article></div></section>
-        <section class="page" id="mine"><header class="page-title"><h2>我的</h2><p>学员档案与个人学习报告。</p></header><div class="content"><article class="card profile-top"><div class="avatar">张</div><div><p class="mini-title">张同学</p><p class="mini-copy">当前阶段：新能源维保实训中</p></div></article><div class="section-head"><h3>学习数据</h3><span>实时更新</span></div><div class="stat-list"><article class="card stat-item"><span>已完成课程</span><b>12节</b></article><article class="card stat-item"><span>实训次数</span><b>8次</b></article><article class="card stat-item warning"><span>风险操作提醒</span><b>2次</b></article></div><button class="report-btn" type="button">查看个人学习报告</button></div></section>
-      </div>
-      <nav class="tabbar" aria-label="小程序底部导航"><button class="tab active" type="button" data-target="home"><svg class="tab-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5 12 5l8 6.5V20a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1v-8.5Z" fill="currentColor"/></svg><span>首页</span></button><button class="tab" type="button" data-target="qa"><svg class="tab-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6.5C5 4.6 6.6 3 8.5 3h7C17.4 3 19 4.6 19 6.5v5c0 1.9-1.6 3.5-3.5 3.5H11l-5 4v-4.3A3.5 3.5 0 0 1 5 12V6.5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 9h.1M12 9h.1M15 9h.1" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg><span>AI问答</span></button><button class="tab" type="button" data-target="practice"><svg class="tab-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14l2 3v3a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-3l2-3Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M7 12V9c0-2 1.6-3.5 3.5-3.5h3C15.4 5.5 17 7 17 9v3M8 16l2 1.5M16 16l-2 1.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>实训学习</span></button><button class="tab" type="button" data-target="mine"><svg class="tab-svg" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 21c1.3-4 4-6 8-6s6.7 2 8 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>我的</span></button></nav>
-      </div></div></section>
+        <section class="page active" id="home"><div class="content home"><header class="hero"><h2>你好，今天继续学习吧</h2><p>AI 赋能维保学习，提升技能更高效</p></header><button class="search" type="button" data-target="qa"><span class="magnify" aria-hidden="true"></span><span>搜索维保问题 / 术语 / 案例</span></button><div class="grid">
+          <button class="action" type="button" data-target="terms"><span class="ico">A</span><span class="copy"><h3>术语翻译</h3><p>中英俄法对照</p></span><span class="chev"></span></button>
+          <button class="action" type="button" data-target="qa"><span class="ico">问</span><span class="copy"><h3>AI维保问答</h3><p>7×24答疑</p></span><span class="chev"></span></button>
+          <button class="action" type="button" data-target="practice"><span class="ico">VR</span><span class="copy"><h3>VR实训辅助</h3><p>操作提醒</p></span><span class="chev"></span></button>
+          <button class="action" type="button" data-target="learn"><span class="ico">补</span><span class="copy"><h3>个性化补学</h3><p>薄弱点推荐</p></span><span class="chev"></span></button>
+          <button class="action" type="button" data-target="cases"><span class="ico">案</span><span class="copy"><h3>维保案例库</h3><p>故障案例查询</p></span><span class="chev"></span></button>
+          <button class="action" type="button" data-target="culture"><span class="ico">合</span><span class="copy"><h3>文化合规</h3><p>海外标准法规</p></span><span class="chev"></span></button>
+        </div><article class="panel"><div class="head"><h3>今日学习进度</h3><span class="link">学习日历</span></div><div class="progress"><div class="metric"><span class="round">时</span><span><span>已学习</span><strong>35</strong><em>分钟</em></span></div><i class="vline"></i><div class="metric"><span class="round ok">✓</span><span><span>已完成</span><strong class="ok">2</strong><em>个任务</em></span></div></div></article><article class="panel"><div class="head"><h3>推荐学习</h3><span class="link">查看更多 <i class="chev"></i></span></div><div class="course-list"><div class="course"><span class="doc"></span><span><h4>电池安全操作规范</h4><span class="meta"><span class="pill">课程</span><span>12 分钟</span></span></span><button class="learn-btn" type="button" data-target="learn">去学习</button></div><div class="course"><span class="doc"></span><span><h4>逆变器常见故障码解析</h4><span class="meta"><span class="pill">课程</span><span>18 分钟</span></span></span><button class="learn-btn" type="button" data-target="learn">去学习</button></div></div></article></div></section>
+        <section class="page" id="terms"><header class="page-title"><h2>术语翻译</h2><p>新能源维保核心术语的中英俄法对照。</p></header><div class="content"><article class="card"><p class="mini-title">快速翻译</p><p class="mini-copy">输入维保术语后可用于生成多语言释义，当前展示常用术语样例。</p><div class="translate"><div class="label">待翻译术语</div><div class="trans-row"><span class="chip">高压互锁</span><span class="arrow">→</span><span class="chip">HVIL / High Voltage Interlock Loop</span></div></div></article><div class="tool-grid"><article class="tile"><b>绝缘检测</b><span>Insulation test</span></article><article class="tile"><b>动力电池包</b><span>Traction battery pack</span></article><article class="tile"><b>逆变器</b><span>Inverter</span></article><article class="tile"><b>维修开关</b><span>Service disconnect</span></article></div></div></section>
+        <section class="page" id="cases"><header class="page-title"><h2>维保案例库</h2><p>按故障现象、处理步骤和安全注意事项查询案例。</p></header><div class="content"><article class="card case"><p class="mini-title">电池包绝缘报警排查</p><p class="mini-copy">先确认车辆下电，再检查高压线束、冷却液渗漏和绝缘阻值记录。</p><div class="case-meta"><span>高压安全</span><span>故障码 P0AA6</span><span>18 分钟</span></div></article><article class="card case"><p class="mini-title">逆变器过温限功率</p><p class="mini-copy">核查冷却回路、温度传感器读数和散热器堵塞情况。</p><div class="case-meta"><span>驱动系统</span><span>热管理</span><span>12 分钟</span></div></article><article class="card case"><p class="mini-title">充电口通信异常</p><p class="mini-copy">对照充电标准检查 CP/CC 信号、电源地和端子氧化。</p><div class="case-meta"><span>充电系统</span><span>标准对照</span><span>15 分钟</span></div></article></div></section>
+        <section class="page" id="practice"><header class="page-title"><h2>实训学习</h2><p>围绕高压安全、故障诊断和 VR 操作提醒组织训练。</p></header><div class="content"><div class="path"><article class="step"><b>01</b><span>课前确认</span></article><article class="step"><b>02</b><span>VR演练</span></article><article class="step"><b>03</b><span>风险复盘</span></article></div><button class="upload" id="uploadZone" type="button"><span><span class="camera"></span><span class="strong">拍照识别当前实训场景</span><span class="mini-copy">点击区域模拟上传并查看识别结果</span></span></button><article class="card" id="resultCard"><p class="mini-title">AI 识别结果</p><div class="result"><div><span>当前场景</span><b>高压电池包检修</b></div><div><span>当前步骤</span><b>维修前安全确认</b></div><div><span>风险等级</span><b class="risk">高</b></div></div></article><article class="card"><p class="mini-title">今日实训任务</p><ol class="todo"><li>完成绝缘防护用品检查</li><li>确认车辆断电和维修开关状态</li><li>记录高压部件检测结果</li><li>提交风险操作复盘</li></ol></article><div class="alert">安全提醒：未完成断电和绝缘确认前，禁止触碰高压部件。</div></div></section>
+        <section class="page" id="qa"><header class="page-title"><h2>AI维保问答</h2><p>接入 deepseek-v4-flash，围绕新能源维保实训进行问答。</p></header><div class="content chat"><div class="chat-log" id="chatLog"><div class="bubble user">维修高压电池包前为什么要做绝缘检测？</div><div class="bubble ai">绝缘检测可以判断高压系统是否存在漏电风险，避免触电和设备损坏。</div></div><article class="card"><p class="mini-title">常见追问</p><p class="mini-copy">可继续提问安全规范、故障排查步骤、实训评分点和合规要求。</p></article><div class="chat-tools"><p class="api" id="apiStatus">当前由 Vercel 后端代理调用 deepseek/deepseek-v4-flash。</p><div class="input-row"><input id="questionInput" type="text" placeholder="请输入你的维保问题" aria-label="请输入你的维保问题"/><button class="send" id="sendBtn" type="button">发送</button></div></div></div></section>
+        <section class="page" id="learn"><header class="page-title"><h2>个性化补学</h2><p>根据薄弱点生成补学路径和课程建议。</p></header><div class="content"><article class="card"><div class="head"><div><div class="label">补学完成度</div><div class="strong">当前完成 72%</div></div><div class="label">本周目标 5 课</div></div><div class="bar"><i style="width:72%"></i></div></article><div class="section-head"><h3>薄弱知识点</h3><span>AI诊断</span></div><div class="tags"><span class="tag">高压下电流程</span><span class="tag">绝缘检测</span><span class="tag">电池包安全拆卸</span></div><div class="section-head"><h3>推荐补学课程</h3><span>去学习</span></div><article class="card"><p class="mini-title">高压安全确认与绝缘检测实训课</p><p class="mini-copy">结合错误记录生成，重点复盘断电确认、检测仪使用与记录填写。</p><span class="meta">预计 24 分钟 · 适合当前阶段</span></article><article class="card"><p class="mini-title">逆变器故障码快速定位</p><p class="mini-copy">针对故障码识读和排查顺序进行短课补强。</p><span class="meta">预计 16 分钟 · 优先推荐</span></article></div></section>
+        <section class="page" id="culture"><header class="page-title"><h2>文化合规</h2><p>了解海外文化差异、国外汽车技术标准和维修规定。</p></header><div class="content"><article class="culture-summary"><b>海外服务场景训练</b><p>面向出海维保、跨文化沟通和当地法规适配，减少因表达、流程和标准差异造成的交付风险。</p></article><article class="card culture-card"><span class="idx">1</span><div><p class="mini-title">海外维修现场沟通规范</p><p class="mini-copy">称谓、确认话术、记录交接和客户沟通边界。</p></div></article><article class="card culture-card"><span class="idx">2</span><div><p class="mini-title">国外汽车技术标准介绍</p><p class="mini-copy">围绕充电接口、安全测试和维修记录的标准差异。</p></div></article><article class="card culture-card"><span class="idx">3</span><div><p class="mini-title">新能源车辆安全法规</p><p class="mini-copy">高压作业、人员资质和现场隔离要求。</p></div></article><article class="card culture-card"><span class="idx">4</span><div><p class="mini-title">跨文化适应实操手册</p><p class="mini-copy">支持中英、中俄、中法对照材料后续接入。</p></div></article></div></section>
+        <section class="page" id="mine"><header class="page-title"><h2>我的</h2><p>个人能力档案、实训记录与阶段报告。</p></header><div class="content"><article class="card profile"><div class="avatar">维</div><div><p class="mini-title">维保工程师</p><p class="mini-copy">当前方向：新能源高压系统维护</p></div></article><div class="section-head"><h3>能力数据</h3><span>实时更新</span></div><article class="card stat"><span>已完成课程</span><b>12节</b></article><article class="card stat"><span>实训记录</span><b>8次</b></article><article class="card stat warn"><span>风险提醒</span><b>2次</b></article><article class="card"><p class="mini-title">阶段能力报告</p><p class="mini-copy">汇总课程完成度、实训表现、风险操作提醒和建议补强方向，不再以学生评价口径展示。</p></article><button class="report" type="button">查看能力报告</button></div></section>
+      </div><nav class="tabbar" aria-label="小程序底部导航"><button class="tab active" type="button" data-target="home"><i>⌂</i><span>首页</span></button><button class="tab" type="button" data-target="qa"><i>◌</i><span>AI问答</span></button><button class="tab" type="button" data-target="practice"><i>▣</i><span>实训学习</span></button><button class="tab" type="button" data-target="mine"><i>♙</i><span>我的</span></button></nav></div>
+    </div></section>
   </main>
   <script>
-    const tabs=Array.from(document.querySelectorAll(".tab"));const pages=Array.from(document.querySelectorAll(".page"));const featureCards=Array.from(document.querySelectorAll("[data-target]"));const uploadZone=document.getElementById("uploadZone");const resultCard=document.getElementById("resultCard");const apiStatus=document.getElementById("apiStatus");const chatLog=document.getElementById("chatLog");const questionInput=document.getElementById("questionInput");const sendBtn=document.getElementById("sendBtn");const modelName="deepseek/deepseek-v4-flash";const chatHistory=[{role:"user",content:"维修高压电池包前为什么要做绝缘检测？"},{role:"assistant",content:"绝缘检测可以判断高压系统是否存在漏电风险，避免触电和设备损坏。"}];
-    function switchPage(target,scrollTarget){pages.forEach(page=>page.classList.toggle("active",page.id===target));tabs.forEach(tab=>tab.classList.toggle("active",tab.dataset.target===target));const activeContent=document.querySelector(`#${target} .content`);if(activeContent)activeContent.scrollTop=0;if(scrollTarget){window.setTimeout(()=>{const el=document.getElementById(scrollTarget);const learnContent=document.getElementById("learnContent");if(el&&learnContent)learnContent.scrollTo({top:el.offsetTop-10,behavior:"smooth"})},80)}}
-    featureCards.forEach(item=>{item.addEventListener("click",()=>{const target=item.dataset.target;if(target)switchPage(target,item.dataset.scroll)})});uploadZone.addEventListener("click",()=>{resultCard.animate([{transform:"translateY(8px)",opacity:.72},{transform:"translateY(0)",opacity:1}],{duration:260,easing:"ease-out"})});
+    const tabs=[...document.querySelectorAll(".tab")],pages=[...document.querySelectorAll(".page")],targets=[...document.querySelectorAll("[data-target]")],uploadZone=document.getElementById("uploadZone"),resultCard=document.getElementById("resultCard"),apiStatus=document.getElementById("apiStatus"),chatLog=document.getElementById("chatLog"),questionInput=document.getElementById("questionInput"),sendBtn=document.getElementById("sendBtn"),modelName="deepseek/deepseek-v4-flash",chatHistory=[{role:"user",content:"维修高压电池包前为什么要做绝缘检测？"},{role:"assistant",content:"绝缘检测可以判断高压系统是否存在漏电风险，避免触电和设备损坏。"}];
+    function switchPage(target){pages.forEach(page=>page.classList.toggle("active",page.id===target));tabs.forEach(tab=>tab.classList.toggle("active",tab.dataset.target===target));const active=document.querySelector(`#${target} .content`);if(active)active.scrollTop=0}
+    targets.forEach(item=>item.addEventListener("click",()=>{if(item.dataset.target)switchPage(item.dataset.target)}));uploadZone.addEventListener("click",()=>resultCard.animate([{transform:"translateY(8px)",opacity:.72},{transform:"translateY(0)",opacity:1}],{duration:260,easing:"ease-out"}));
     function setStatus(message,isError=false){apiStatus.textContent=message;apiStatus.classList.toggle("error",isError)}function appendMessage(role,content,isLoading=false){const bubble=document.createElement("div");bubble.className=`bubble ${role==="user"?"user":"ai"}${isLoading?" loading":""}`;bubble.textContent=content;chatLog.appendChild(bubble);bubble.scrollIntoView({behavior:"smooth",block:"end"});return bubble}
     async function askDeepSeek(question){const messages=[{role:"system",content:"你是新能源维保 AI 实训助手。请用中文回答，面向职业培训、实训和上岗场景。回答要准确、简洁、强调安全规范；遇到高压电、断电、绝缘检测、法规合规等问题，优先提示风险和操作前提。"},...chatHistory.slice(-10),{role:"user",content:question}];const response=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:modelName,messages,temperature:.3,stream:false,response_format:{type:"text"}})});if(!response.ok){const errorText=await response.text();throw new Error(errorText||`接口返回 ${response.status}`)}const data=await response.json();return data.answer?.trim()||"模型没有返回有效内容，请稍后再试。"}
-    async function sendQuestion(){const question=questionInput.value.trim();if(!question){setStatus("请先输入你的维保问题。",true);return}appendMessage("user",question);questionInput.value="";sendBtn.disabled=true;setStatus("正在调用 deepseek-v4-flash，请稍候。");const loadingBubble=appendMessage("assistant","AI 正在分析实训问题...",true);try{const answer=await askDeepSeek(question);loadingBubble.classList.remove("loading");loadingBubble.textContent=answer;chatHistory.push({role:"user",content:question});chatHistory.push({role:"assistant",content:answer});setStatus("回答已生成，可继续追问。")}catch(error){loadingBubble.remove();setStatus(`调用失败：${error.message}`,true)}finally{sendBtn.disabled=false;questionInput.focus()}}
+    async function sendQuestion(){const question=questionInput.value.trim();if(!question){setStatus("请先输入你的维保问题。",true);return}appendMessage("user",question);questionInput.value="";sendBtn.disabled=true;setStatus("正在调用 deepseek-v4-flash，请稍候。");const loading=appendMessage("assistant","AI 正在分析实训问题...",true);try{const answer=await askDeepSeek(question);loading.classList.remove("loading");loading.textContent=answer;chatHistory.push({role:"user",content:question},{role:"assistant",content:answer});setStatus("回答已生成，可继续追问。")}catch(error){loading.remove();setStatus(`调用失败：${error.message}`,true)}finally{sendBtn.disabled=false;questionInput.focus()}}
     sendBtn.addEventListener("click",sendQuestion);questionInput.addEventListener("keydown",event=>{if(event.key==="Enter"&&!event.shiftKey){event.preventDefault();sendQuestion()}});
   </script>
 </body>
